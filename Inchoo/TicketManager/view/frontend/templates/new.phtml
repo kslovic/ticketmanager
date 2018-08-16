@@ -1,0 +1,46 @@
+<?php
+
+/** @var \Inchoo\TicketManager\Block\Ticket\NewBlock $block */
+?>
+
+<form action="<?= $block->escapeUrl($block->getSaveUrl()) ?>"
+      method="post"
+      id="ticket-form"
+      data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>"
+      data-mage-init='{"validation":{}}'>
+    <fieldset class="fieldset">
+        <legend class="legend"><span><?= $block->escapeHtml(__('New Ticket')) ?></span></legend><br />
+        <div class="field required">
+            <label for="subject" class="label">
+                <span><?= $block->escapeHtml(__('Subject')) ?></span>
+            </label>
+            <div class="control">
+                <input type="text" id ="subject" name="subject" class="input-text" data-validate="{required:true}" />
+            </div>
+        </div>
+        <div class="field required">
+            <label for="message" class="label">
+                <span><?= $block->escapeHtml(__('Message')) ?></span>
+            </label>
+            <div class="control">
+                <input type="text" id ="message" name="message" class="input-text" data-validate="{required:true}" />
+            </div>
+        </div>
+    </fieldset>
+    <div class="actions-toolbar">
+        <div class="primary">
+            <button type="submit"
+                    class="action save primary"
+                    data-action="save-ticket"
+                    title="<?= $block->escapeHtmlAttr(__('Save Ticket')) ?>">
+                <span><?= $block->escapeHtml(__('Save Ticket')) ?></span>
+            </button>
+        </div>
+        <div class="secondary">
+            <a class="action back" href="<?= $block->escapeUrl($block->getBackUrl()) ?>">
+                <span><?= $block->escapeHtml(__('Go back')) ?></span>
+            </a>
+        </div>
+    </div>
+</form>
+

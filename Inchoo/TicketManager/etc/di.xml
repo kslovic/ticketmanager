@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="Inchoo\TicketManager\Api\Data\TicketSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <preference for="Inchoo\TicketManager\Api\Data\TicketInterface" type="Inchoo\TicketManager\Model\Ticket" />
+    <preference for="Inchoo\TicketManager\Api\TicketRepositoryInterface" type="Inchoo\TicketManager\Model\TicketRepository" />
+
+    <preference for="Inchoo\TicketManager\Api\Data\TicketReplySearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <preference for="Inchoo\TicketManager\Api\Data\TicketReplyInterface" type="Inchoo\TicketManager\Model\TicketReply" />
+    <preference for="Inchoo\TicketManager\Api\TicketReplyRepositoryInterface" type="Inchoo\TicketManager\Model\TicketReplyRepository" />
+
+</config>

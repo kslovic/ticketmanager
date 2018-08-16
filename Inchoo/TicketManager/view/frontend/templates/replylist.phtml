@@ -1,0 +1,59 @@
+<?php
+/**
+ * @var \Inchoo\TicketManager\Block\TicketReply\ListBlock $block
+ */
+$ticket = $block->getTicket();
+$ticketReplyList = $block->getTicketReplies();
+if ($ticket): ?>
+<h2><?= $block->escapeHtml(__('Ticket')) ?></h2>
+<div class="table-wrapper">
+    <table class="data table" id="my-tickets-table">
+        <caption class="table-caption"><?= $block->escapeHtml(__('Ticket')) ?></caption>
+        <tbody>
+            <tr>
+                <td class="col"><span class="legend"><?= $block->escapeHtml(__('Subject:')) ?></span> <?= $block->escapeHtml($ticket->getSubject()) ?> </td>
+            </tr>
+            <tr>
+                <td class="col"><span class="legend"> <?= $block->escapeHtml(__('Message:')) ?></span> <?= $block->escapeHtml($ticket->getMessage()) ?></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<?php endif ?>
+<?php if ($ticketReplyList && count($ticketReplyList)):
+    foreach($ticketReplyList as $ticketReply): ?>
+    <div <?php if($ticketReply->getAdmin()!=true):?>align="right" <?php else: ?> align="left" <?php endif ?> >
+      <?php if($ticketReply->getAdmin()!=true):?>
+       <div> <?= $block->getSenderName($ticket->getId()) ?> </div>
+    <?php else: ?>
+        <div> Admin </div>
+    <?php endif ?>
+    <div> <?= $block->escapeHtml($ticketReply->getContent()) ?> </div>
+    <div> <?= $block->escapeHtml($ticketReply->getCreatedAt()) ?> </div>
+    </div>
+<?php endforeach; endif;
+if($ticket->getOpened()!=false): ?>
+<form action="<?= $block->escapeUrl($block->getAddTicketReplyUrl()) ?>) ?>"
+      method="post"
+      id="form-reply"
+      data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>"
+      data-mage-init='{"validation":{}}'>
+    <input type="hidden" id="ticket_id" name="ticket_id" value="<?= $ticket->getId() ?>" />
+    <fieldset>
+        <div class="field required">
+            <label for="content" class="label">
+                <span><?= $block->escapeHtml(__('Reply')) ?></span>
+            </label>
+            <div class="control">
+                <textarea id="content" name="content" class="input-text" data-validate="{required:true}"></textarea>
+            </div>
+        </div>
+        <div class="primary">
+            <button type="submit" title="<?= $block->escapeHtmlAttr(__('Reply')) ?>" class="action primary add"><span><?= $block->escapeHtml(__('Reply')) ?></span></button>
+        </div>
+    </fieldset>
+</form>
+<?php endif ?>
+<div class="secondary">
+    <a class="action back" href="<?= $block->escapeUrl($block->getBackUrl()) ?>"><span><?= $block->escapeHtml(__('Back')) ?></span></a>
+</div>
