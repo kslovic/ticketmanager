@@ -23,8 +23,8 @@ if ($ticket): ?>
 <?php if ($ticketReplyList && count($ticketReplyList)>0):
     foreach(array_reverse($ticketReplyList) as $ticketReply): ?>
       <div class="page-main-actions">
-      <?php if($ticketReply->getAdmin()!=true&&$block->getSenderName($ticket->getId())):?>
-       <strong> <?= $block->escapeHtml($block->getSenderName($ticket->getId())) ?> </strong>
+      <?php if($ticketReply->getAdmin()!=true&&$block->getSenderName($ticket->getCustomerId())):?>
+       <strong> <?= $block->escapeHtml($block->getSenderName($ticket->getCustomerId())) ?> </strong>
     <?php else: ?>
         <strong><?= $block->escapeHtml(__('Admin')) ?></strong>
     <?php endif ?>
