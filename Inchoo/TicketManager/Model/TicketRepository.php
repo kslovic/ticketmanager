@@ -81,7 +81,7 @@ class TicketRepository implements TicketRepositoryInterface
         $ticket = $this->ticketModelFactory->create();
         $this->ticketResource->load($ticket, $ticketId);
         if (!$ticket->getId()) {
-            throw new NoSuchEntityException(__('News with id "%1" does not exist.', $ticketId));
+            throw new NoSuchEntityException(__('Ticket with id "%1" does not exist.', $ticketId));
         }
         return $ticket;
     }
@@ -135,4 +135,14 @@ class TicketRepository implements TicketRepositoryInterface
         $searchResults->setTotalCount($collection->getSize());
         return $searchResults;
     }
+    public function getListCollection(SearchCriteriaInterface $searchCriteria)
+    {
+        /** @var \Inchoo\TicketManager\Model\ResourceModel\Ticket\Collection $collection */
+        $collection = $this->ticketCollectionFactory->create();
+
+        $this->collectionProcessor->process($searchCriteria, $collection);
+
+        return $collection;
+    }
+
 }

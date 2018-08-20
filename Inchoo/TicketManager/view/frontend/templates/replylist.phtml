@@ -3,7 +3,7 @@
  * @var \Inchoo\TicketManager\Block\TicketReply\ListBlock $block
  */
 $ticket = $block->getTicket();
-$ticketReplyList = $block->getTicketReplies();
+$ticketReplyList = $block->getTicketReplies()->getItems();
 if ($ticket): ?>
 <h2><?= $block->escapeHtml(__('Ticket')) ?></h2>
 <div class="table-wrapper">
@@ -14,24 +14,33 @@ if ($ticket): ?>
                 <td class="col"><span class="legend"><?= $block->escapeHtml(__('Subject:')) ?></span> <?= $block->escapeHtml($ticket->getSubject()) ?> </td>
             </tr>
             <tr>
+                <td class="col"><span class="legend"><?= $block->escapeHtml(__('Created at:')) ?></span> <?= $block->escapeHtml($block->formatDate($ticket->getCreatedAt(),3,true)) ?></td>
+            </tr>
+            <tr>
                 <td class="col"><span class="legend"> <?= $block->escapeHtml(__('Message:')) ?></span> <?= $block->escapeHtml($ticket->getMessage()) ?></td>
             </tr>
         </tbody>
     </table>
 </div>
 <?php endif ?>
-<?php if ($ticketReplyList && count($ticketReplyList)):
-    foreach($ticketReplyList as $ticketReply): ?>
-    <div <?php if($ticketReply->getAdmin()!=true):?>align="right" <?php else: ?> align="left" <?php endif ?> >
-      <?php if($ticketReply->getAdmin()!=true):?>
-       <div> <?= $block->getSenderName($ticket->getId()) ?> </div>
-    <?php else: ?>
-        <div> Admin </div>
-    <?php endif ?>
-    <div> <?= $block->escapeHtml($ticketReply->getContent()) ?> </div>
-    <div> <?= $block->escapeHtml($ticketReply->getCreatedAt()) ?> </div>
-    </div>
-<?php endforeach; endif;
+<?php if ($ticketReplyList && count($ticketReplyList)>0):
+    foreach(array_reverse($ticketReplyList) as $ticketReply): ?>
+        <fieldset>
+            <?php if($ticketReply->getAdmin()!=true&&$block->getSenderName($ticket->getId())):?>
+                <strong> <?= $block->escapeHtml($block->getSenderName($ticket->getId())) ?> </strong>
+            <?php else: ?>
+                <strong> <?= $block->escapeHtml('Admin') ?></strong>
+            <?php endif ?>
+            <div> <?= $block->escapeHtml($ticketReply->getContent()) ?> </div>
+            <div> <?= $block->escapeHtml($block->formatDate($ticketReply->getCreatedAt(),3,true)) ?> </div>
+        </fieldset>
+<?php endforeach; ?>
+ <?php if ($block->getPagerHtml()): ?>
+    <div class="order-products-toolbar toolbar bottom"><?= $block->getPagerHtml() ?></div>
+<?php endif ?>
+<?php else: ?>
+    <div class="message info empty"><span><?= $block->escapeHtml(__('You have no ticket replies.')) ?></span></div>
+<?php endif;
 if($ticket->getOpened()!=false): ?>
 <form action="<?= $block->escapeUrl($block->getAddTicketReplyUrl()) ?>) ?>"
       method="post"
@@ -45,7 +54,7 @@ if($ticket->getOpened()!=false): ?>
                 <span><?= $block->escapeHtml(__('Reply')) ?></span>
             </label>
             <div class="control">
-                <textarea id="content" name="content" class="input-text" data-validate="{required:true}"></textarea>
+                <textarea id="content" name="content" class="input-text" data-validate="{required:true, maxlength: 64000}"></textarea>
             </div>
         </div>
         <div class="primary">

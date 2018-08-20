@@ -53,7 +53,7 @@ class InstallSchema implements InstallSchemaInterface
         )->addColumn(
             'message',
             \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-            255,
+            '64k',
             [],
             'Ticket message'
         )->addColumn(
@@ -116,7 +116,7 @@ class InstallSchema implements InstallSchemaInterface
         )->addColumn(
             'content',
             \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-            255,
+            '64k',
             [],
             'Ticket Reply content'
         )->addColumn(

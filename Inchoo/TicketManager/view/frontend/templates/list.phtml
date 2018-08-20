@@ -3,7 +3,7 @@
  * @var \Inchoo\TicketManager\Block\Ticket\ListBlock $block
  */
 $ticketList = $block->getTickets();
-if ($ticketList && count($ticketList)): ?>
+if ($ticketList && count($ticketList)>0): ?>
 <h2><?= $block->escapeHtml(__('Ticket list')) ?></h2>
 <div class="table-wrapper">
     <table class="data table" id="my-tickets-table">
@@ -22,8 +22,8 @@ if ($ticketList && count($ticketList)): ?>
     <?php foreach($ticketList as $ticket): ?>
             <tr>
             <td data-th="<?= $block->escapeHtml(__('Subject')) ?>" class="col"><?= $block->escapeHtml($ticket->getSubject()) ?></td>
-            <td data-th="<?= $block->escapeHtml(__('Created at')) ?>" class="col"><?= $block->escapeHtml($ticket->getCreatedAt()) ?></td>
-            <td data-th="<?= $block->escapeHtml(__('Updated at')) ?>" class="col"><?= $block->escapeHtml($ticket->getUpdatedAt()) ?></td>
+            <td data-th="<?= $block->escapeHtml(__('Created at')) ?>" class="col"><?= $block->escapeHtml($block->formatDate($ticket->getCreatedAt(),3,true)) ?></td>
+            <td data-th="<?= $block->escapeHtml(__('Updated at')) ?>" class="col"><?= $block->escapeHtml($block->formatDate($ticket->getUpdatedAt(),3,true)) ?></td>
             <td data-th="<?= $block->escapeHtml(__('Message')) ?>" class="col"><?= $block->escapeHtml($ticket->getMessage()) ?></td>
             <td data-th="<?= $block->escapeHtml(__('Status')) ?>" class="col"><?php if($block->escapeHtml($ticket->getOpened())==1) echo 'opened'; else echo 'closed'; ?></td>
             <td data-th="<?= $block->escapeHtml(__('Action')) ?>" class="col">
@@ -41,12 +41,17 @@ if ($ticketList && count($ticketList)): ?>
     </tbody>
     </table>
 </div>
-    <div class="actions-toolbar">
-        <div class="primary">
-            <a type="button" href="<?= $block->escapeUrl($block->getAddTicketUrl()) ?>" title="<?= $block->escapeHtmlAttr(__('Add New Ticket')) ?>" class="action primary add"><span><?= $block->escapeHtml(__('Add New Ticket')) ?></span></a>
-        </div>
-        <div class="secondary">
-            <a class="action back" href="<?= $block->escapeUrl($block->getBackUrl()) ?>"><span><?= $block->escapeHtml(__('Back')) ?></span></a>
-        </div>
-    </div>
+<?php if ($block->getPagerHtml()): ?>
+        <div class="order-products-toolbar toolbar bottom"><?= $block->getPagerHtml() ?></div>
 <?php endif ?>
+<?php else: ?>
+    <div class="message info empty"><span><?=  $block->escapeHtml(__('You have no tickets.')) ?></span></div>
+<?php endif ?>
+<div class="actions-toolbar">
+    <div class="primary">
+        <a type="button" href="<?= $block->escapeUrl($block->getAddTicketUrl()) ?>" title="<?= $block->escapeHtmlAttr(__('Add New Ticket')) ?>" class="action primary add"><span><?= $block->escapeHtml(__('Add New Ticket')) ?></span></a>
+    </div>
+    <div class="secondary">
+        <a class="action back" href="<?= $block->escapeUrl($block->getBackUrl()) ?>"><span><?= $block->escapeHtml(__('Back')) ?></span></a>
+    </div>
+</div>

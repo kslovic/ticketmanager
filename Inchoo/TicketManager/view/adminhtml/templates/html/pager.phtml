@@ -1,0 +1,87 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/**
+ * Pager template
+ *
+ * @see \Magento\Theme\Block\Html\Pager
+ */
+?>
+<?php if ($block->getCollection()->getSize()): ?>
+
+    <?php if ($block->getUseContainer()): ?>
+    <div class="pager">
+    <?php endif ?>
+
+        <?php if ($block->getShowAmounts()): ?>
+        <p class="toolbar-amount">
+            <span class="toolbar-number">
+            <?php if ($block->getLastPageNum()>1): ?>
+                <?= /* @escapeNotVerified */ __('Items %1 to %2 of %3 total', $block->getFirstNum(), $block->getLastNum(), $block->getTotalNum()) ?>
+            <?php elseif ($block->getTotalNum() == 1): ?>
+                <?= /* @escapeNotVerified */ __('%1 Item', $block->getTotalNum()) ?>
+            <?php else: ?>
+                <?= /* @escapeNotVerified */ __('%1 Item(s)', $block->getTotalNum()) ?>
+            <?php endif; ?>
+            </span>
+        </p>
+        <?php endif ?>
+
+        <?php if ($block->getLastPageNum()>1): ?>
+        <div class="pages admin__data-grid-pager">
+            <?php if (!$block->isLastPage()): ?>
+                <?php $text = $block->getAnchorTextForNext() ? $block->getAnchorTextForNext() : '';?>
+                <a class="action-previous" href="<?= /* @escapeNotVerified */ $block->getNextPageUrl() ?>" title="<?= /* @escapeNotVerified */ $text ? $text : __('Previous') ?>">
+                    <span class="label"><?= /* @escapeNotVerified */ __('Page') ?></span>
+                    <span><?= /* @escapeNotVerified */ $text ? $text : __('Previous') ?></span>
+                </a>
+            <?php endif;?>
+            <?php if (!$block->isFirstPage()): ?>
+                    <?php $text = $block->getAnchorTextForPrevious() ? $block->getAnchorTextForPrevious() : '';?>
+                    <a class="action-next" href="<?= /* @escapeNotVerified */ $block->getPreviousPageUrl() ?>" title="<?= /* @escapeNotVerified */ $text ? $text : __('Next') ?>">
+                        <span class="label"><?= /* @escapeNotVerified */ __('Page') ?></span>
+                        <span><?= /* @escapeNotVerified */ $text ? $text : __('Next') ?></span>
+                    </a>
+            <?php endif;?>
+
+            <?php if ($block->canShowFirst()): ?>
+                    <a class="page first" href="<?= /* @escapeNotVerified */ $block->getFirstPageUrl() ?>">
+                        <span class="label"><?= /* @escapeNotVerified */ __('Page') ?></span>
+                        <span>1</span>
+                    </a>
+            <?php endif;?>
+
+            <?php if ($block->canShowPreviousJump()): ?>
+                    <a class="page previous jump" title="" href="<?= /* @escapeNotVerified */ $block->getPreviousJumpUrl() ?>">
+                        <span>...</span>
+                    </a>
+            <?php endif;?>
+
+            <?php if ($block->canShowNextJump()): ?>
+                    <a class="page next jump" title="" href="<?= /* @escapeNotVerified */ $block->getNextJumpUrl() ?>">
+                        <span>...</span>
+                    </a>
+            <?php endif;?>
+
+            <?php if ($block->canShowLast()): ?>
+                  <a class="page last" href="<?= /* @escapeNotVerified */ $block->getLastPageUrl() ?>">
+                      <span class="label"><?= /* @escapeNotVerified */ __('Page') ?></span>
+                      <span><?= /* @escapeNotVerified */ $block->getLastPageNum() ?></span>
+                  </a>
+            <?php endif;?>
+
+        </div>
+        <?php endif; ?>
+
+    <?php if ($block->getUseContainer()): ?>
+    </div>
+    <?php endif ?>
+
+<?php endif ?>

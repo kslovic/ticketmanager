@@ -17,10 +17,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
 class Close extends Action
 {
     /**
-     * @var \Magento\Framework\App\Request\Http
-     */
-    protected $request;
-    /**
      * @var TicketRepository
      */
     protected $ticketRepository;
@@ -32,45 +28,62 @@ class Close extends Action
     /**
      * Close constructor.
      * @param Context $context
-     * @param \Magento\Framework\App\Request\Http $request
      * @param TicketRepository $ticketRepository
      * @param \Magento\Customer\Model\Session $customerSession
      */
     public function __construct(
         Context $context,
-       \Magento\Framework\App\Request\Http $request,
         TicketRepository $ticketRepository,
         \Magento\Customer\Model\Session $customerSession
     )
     {
         parent::__construct($context);
-        $this->request = $request;
         $this->ticketRepository = $ticketRepository;
         $this->customerSession = $customerSession;
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|void
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
      */
     public function execute()
     {
-        if($this->customerSession->isLoggedIn()) {
-            $id = $this->request->getParam('id');
+        //check if customer is logged in
+        if ($this->customerSession->isLoggedIn()) {
+            $id = $this->getRequest()->getParam('id');
+            $error = false;
+            //validate
+            try {
+                if (!\Zend_Validate::is(trim($id), 'NotEmpty') || !\Zend_Validate::is(trim($id), 'Int')) {
+                    $error = true;
+                }
+                if ($error) {
+                    throw new \Exception();
+                }
+            } catch (\Exception $e) {
+                $this->messageManager->addErrorMessage(__('We can\'t process your request right now. Sorry, that\'s all we know.'));
+                return $this->_redirect('t_manager/ticket/list');
+            }
+            //get ticket
             try {
                 $ticket = $this->ticketRepository->getById($id);
-
-                if ($this->customerSession->getCustomer()->getId() == $ticket->getCustomerId()) {
-                    $ticket->setOpened(false);
-                    try {
-                        $this->ticketRepository->save($ticket);
-                        $this->_redirect('t_manager/ticket/list');
-                    } catch (CouldNotSaveException $e) {
-                    }
-                }
             } catch (NoSuchEntityException $e) {
+                $this->messageManager->addErrorMessage(__('Could not found ticket'));
+                return $this->_redirect('t_manager/ticket/list');
             }
+            //check if ticket owner is current user
+            if ($this->customerSession->getCustomer()->getId() == $ticket->getCustomerId()) {
+                //close ticket
+                $ticket->setOpened(false);
+                //save ticket
+                try {
+                    $this->ticketRepository->save($ticket);
+                    $this->messageManager->addSuccessMessage(__('You closed the ticket.'));
+                } catch (CouldNotSaveException $e) {
+                    $this->messageManager->addErrorMessage(__('Could not save ticket'));
+                }
+                return $this->_redirect('t_manager/ticket/list');
+                }
         }
-        else
-            $this->_redirect('customer/account/login');
+        return $this->_redirect('customer/account/login');
     }
 }

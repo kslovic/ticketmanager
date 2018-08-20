@@ -75,4 +75,92 @@ class Ticket extends \Magento\Framework\Model\AbstractModel implements TicketInt
     }
 
 
+    /**
+     * @return int
+     */
+    public function getCustomerId()
+    {
+        return $this->getData(self::CUSTOMER_ID);
+    }
+
+    /**
+     * @param $customerId
+     * @return TicketInterface
+     */
+    public function setCustomerId($customerId)
+    {
+        return $this->setData(self::CUSTOMER_ID, $customerId);
+    }
+
+    /**
+     * @return int
+     */
+    public function getWebsiteId()
+    {
+        return $this->getData(self::WEBSITE_ID);
+    }
+
+    /**
+     * @param $websiteId
+     * @return TicketInterface
+     */
+    public function setWebsiteId($websiteId)
+    {
+        return $this->setData(self::WEBSITE_ID, $websiteId);
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getCreatedAt()
+    {
+        return $this->getData(self::CREATED_AT);
+    }
+
+    /**
+     *
+     * @param string $createdAt
+     * @return TicketInterface
+     */
+    public function setCreatedAt($createdAt = null)
+    {
+        return $this->setData(self::CREATED_AT, $createdAt);
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getUpdatedAt()
+    {
+        return $this->getData(self::UPDATED_AT);
+    }
+
+    /**
+     *
+     * @param string $updatedAt
+     * @return TicketInterface
+     */
+    public function setUpdatedAt($updatedAt = null)
+    {
+        return $this->setData(self::UPDATED_AT, $updatedAt);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getOpened()
+    {
+        return $this->getData(self::OPENED);
+    }
+
+    /**
+     * @param $opened
+     * @return TicketInterface
+     */
+    public function setOpened($opened = null)
+    {
+        return $this->setData(self::OPENED, $opened);
+    }
 }

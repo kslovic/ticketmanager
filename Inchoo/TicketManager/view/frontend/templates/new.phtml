@@ -15,7 +15,7 @@
                 <span><?= $block->escapeHtml(__('Subject')) ?></span>
             </label>
             <div class="control">
-                <input type="text" id ="subject" name="subject" class="input-text" data-validate="{required:true}" />
+                <input type="text" id ="subject" name="subject" class="input-text" data-validate="{required:true, maxlength: 255}" />
             </div>
         </div>
         <div class="field required">
@@ -23,7 +23,7 @@
                 <span><?= $block->escapeHtml(__('Message')) ?></span>
             </label>
             <div class="control">
-                <input type="text" id ="message" name="message" class="input-text" data-validate="{required:true}" />
+                <input type="text" id ="message" name="message" class="input-text" data-validate="{required:true, maxlength: 64000}" />
             </div>
         </div>
     </fieldset>

@@ -43,9 +43,9 @@ class NewAction extends Action
      */
     public function execute()
     {
+        //check if customer is logged in
         if($this->customerSession->isLoggedIn())
              return $this->resultPageFactory->create();
-        else
-            $this->_redirect('customer/account/login');
+        return $this->_redirect('customer/account/login');
     }
 }

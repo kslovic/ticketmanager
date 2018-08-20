@@ -18,10 +18,6 @@ use Magento\Framework\Exception\CouldNotSaveException;
 class Save extends Action
 {
     /**
-     * @var \Magento\Framework\App\Request\Http
-     */
-    protected $request;
-    /**
      * @var TicketRepository
      */
     protected $ticketRepository;
@@ -41,7 +37,6 @@ class Save extends Action
     /**
      * Save constructor.
      * @param Context $context
-     * @param \Magento\Framework\App\Request\Http $request
      * @param TicketRepository $ticketRepository
      * @param TicketInterfaceFactory $ticketFactory
      * @param \Magento\Customer\Model\Session $customerSession
@@ -49,7 +44,6 @@ class Save extends Action
      */
     public function __construct(
         Context $context,
-        \Magento\Framework\App\Request\Http $request,
         TicketRepository $ticketRepository,
         TicketInterfaceFactory $ticketFactory,
         \Magento\Customer\Model\Session $customerSession,
@@ -57,7 +51,6 @@ class Save extends Action
     )
     {
         parent::__construct($context);
-        $this->request = $request;
         $this->ticketRepository = $ticketRepository;
         $this->ticketFactory = $ticketFactory;
         $this->customerSession = $customerSession;
@@ -65,7 +58,7 @@ class Save extends Action
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|void
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function execute()
@@ -73,28 +66,45 @@ class Save extends Action
         /**
          * @var Ticket $ticket
          */
-
+        //check if customer is logged in
         if($this->customerSession->isLoggedIn()) {
+
+            $subject = $this->getRequest()->getParam('subject');
+            $message = $this->getRequest()->getParam('message');
+            $error = false;
+            //validate
+            try {
+                if (!\Zend_Validate::is(trim($subject), 'NotEmpty')||!\Zend_Validate::is(trim($subject), 'Regex', array('pattern' => '/[0-9a-zA-Z\s\'.;-]+/'))||!\Zend_Validate::is(trim($subject), 'StringLength',array('max' =>255))) {
+                    $error = true;
+                }
+                if (!\Zend_Validate::is(trim($message), 'NotEmpty')||!\Zend_Validate::is(trim($message), 'Regex', array('pattern' => '/[0-9a-zA-Z\s\'.;-]+/'))||!\Zend_Validate::is(trim($message), 'StringLength',array('max' =>64000))) {
+                    $error = true;
+                }
+                if($error){
+                    throw new \Exception();
+                }
+            } catch (\Exception $e){
+                $this->messageManager->addErrorMessage(__('We can\'t process your request right now. Sorry, that\'s all we know.'));
+                return $this->_redirect('t_manager/ticket/list');
+            }
+            // set data
             $ticket = $this->ticketFactory->create();
-            $ticket->setData($this->request->getParams());
 
-
+            $ticket->setData($this->getRequest()->getParams());
             $ticket->setData('customer_id', $this->customerSession->getCustomerId());
 
             $website_id = $this->_storeManager->getStore()->getWebsiteId();
             $ticket->setData('website_id', $website_id);
-
+            //save ticket
             try {
                 $this->ticketRepository->save($ticket);
+                $this->messageManager->addSuccessMessage(__('You successfully added new ticket.'));
             } catch (CouldNotSaveException $e) {
-                //catch block
-                var_dump($e->getMessage());
+                $this->messageManager->addErrorMessage(__('Could not save ticket'));
             }
-
-            $this->_redirect('t_manager/ticket/list');
+            return $this->_redirect('t_manager/ticket/list');
         }
-        else
-            $this->_redirect('customer/account/login');
+        return $this->_redirect('customer/account/login');
 
     }
 }

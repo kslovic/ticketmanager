@@ -42,9 +42,26 @@ class ListAction extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
+        $p = $this->getRequest()->getParam('p');
+        //check p
+        if(isset($p)) {
+            $error = false;
+            //validate p
+            try {
+                if (!\Zend_Validate::is(trim($p), 'Int')) {
+                    $error = true;
+                }
+                if ($error) {
+                    throw new \Exception();
+                }
+            } catch (\Exception $e) {
+                $this->messageManager->addErrorMessage(__('We can\'t process your request right now. Sorry, that\'s all we know.'));
+                return $this->_redirect('t_manager/ticket/list');
+            }
+        }
+        //check if customer is logged in
         if($this->customerSession->isLoggedIn())
             return $this->resultPageFactory->create();
-        else
-            $this->_redirect('customer/account/login');
+        return $this->_redirect('customer/account/login');
     }
 }

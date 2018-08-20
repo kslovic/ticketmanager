@@ -1,0 +1,45 @@
+<?php
+/**
+ * @var \Inchoo\TicketManager\Block\Adminhtml\TicketReply\ListBlock $block
+ */
+$ticket = $block->getTicket();
+$ticketReplyList = $block->getTicketReplies()->getItems();
+if ($ticket): ?>
+    <div>
+        <strong><?= $block->escapeHtml(__('Subject:')) ?></strong> <?= $block->escapeHtml($ticket->getSubject()) ?>
+    </div>
+    <div>
+        <strong><?= $block->escapeHtml(__('Created at:')) ?></strong> <?= $block->escapeHtml($block->formatDate($ticket->getCreatedAt(),3,true)) ?>
+    </div>
+    <div>
+        <strong><?= $block->escapeHtml(__('Message:')) ?></strong> <?= $block->escapeHtml($ticket->getMessage()) ?>
+    </div>
+    <div>
+        <strong><?= $block->escapeHtml(__('Status:')) ?></strong> <?php if(1==$block->escapeHtml($ticket->getOpened())): echo $block->escapeHtml(__('Opened')); else: echo $block->escapeHtml(__('Closed')); endif; ?>
+    </div>
+
+
+<?php endif ?>
+<?php if ($ticketReplyList && count($ticketReplyList)>0):
+    foreach(array_reverse($ticketReplyList) as $ticketReply): ?>
+      <div class="page-main-actions">
+      <?php if($ticketReply->getAdmin()!=true&&$block->getSenderName($ticket->getId())):?>
+       <strong> <?= $block->escapeHtml($block->getSenderName($ticket->getId())) ?> </strong>
+    <?php else: ?>
+        <strong><?= $block->escapeHtml(__('Admin')) ?></strong>
+    <?php endif ?>
+        <div> <?= $block->escapeHtml($ticketReply->getContent()) ?> </div>
+        <div> <?= $block->escapeHtml($block->formatDate($ticketReply->getCreatedAt(),3,true)) ?> </div>
+      </div>
+<?php endforeach;
+if ($block->getPagerHtml()): ?>
+     <div class="order-products-toolbar toolbar bottom"><?= $block->getPagerHtml() ?></div>
+<?php endif ?>
+<?php else: ?>
+     <div class="message info empty"><span><?= $block->escapeHtml( __('You have no ticket replies.')) ?></span></div>
+<?php endif;
+if($ticket->getOpened()!=true): ?>
+    <div class="secondary">
+        <a class="action back" href="<?= $block->escapeUrl($block->getBackUrl()) ?>"><span><?= $block->escapeHtml(__('Back')) ?></span></a>
+    </div>
+<?php endif; ?>

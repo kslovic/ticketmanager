@@ -81,7 +81,7 @@ class TicketReplyRepository implements TicketReplyRepositoryInterface
         $ticket = $this->ticketReplyModelFactory->create();
         $this->ticketReplyResource->load($ticket, $ticketReplyId);
         if (!$ticket->getId()) {
-            throw new NoSuchEntityException(__('News with id "%1" does not exist.', $ticketReplyId));
+            throw new NoSuchEntityException(__('TicketReply with id "%1" does not exist.', $ticketReplyId));
         }
         return $ticket;
     }
@@ -134,5 +134,19 @@ class TicketReplyRepository implements TicketReplyRepositoryInterface
         $searchResults->setItems($collection->getItems());
         $searchResults->setTotalCount($collection->getSize());
         return $searchResults;
+    }
+
+    /**
+     * @param SearchCriteriaInterface $searchCriteria
+     * @return \Inchoo\TicketManager\Model\ResourceModel\TicketReply\Collection
+     */
+    public function getListCollection(SearchCriteriaInterface $searchCriteria)
+    {
+        /** @var \Inchoo\TicketManager\Model\ResourceModel\TicketReply\Collection $collection */
+        $collection = $this->ticketReplyCollectionFactory->create();
+
+        $this->collectionProcessor->process($searchCriteria, $collection);
+
+        return $collection;
     }
 }
