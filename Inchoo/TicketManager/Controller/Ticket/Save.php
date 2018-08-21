@@ -33,6 +33,10 @@ class Save extends Action
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $_storeManager;
+    /**
+     * @var \Magento\Framework\Event\ManagerInterface
+     */
+    protected $eventManager;
 
     /**
      * Save constructor.
@@ -47,7 +51,8 @@ class Save extends Action
         TicketRepository $ticketRepository,
         TicketInterfaceFactory $ticketFactory,
         \Magento\Customer\Model\Session $customerSession,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\Event\ManagerInterface $eventManager
     )
     {
         parent::__construct($context);
@@ -55,6 +60,7 @@ class Save extends Action
         $this->ticketFactory = $ticketFactory;
         $this->customerSession = $customerSession;
         $this->_storeManager = $storeManager;
+        $this->eventManager = $eventManager;
     }
 
     /**
@@ -99,6 +105,10 @@ class Save extends Action
             try {
                 $this->ticketRepository->save($ticket);
                 $this->messageManager->addSuccessMessage(__('You successfully added new ticket.'));
+                $this->eventManager->dispatch(
+                    'new_ticket_created',
+                    ['model' => $ticket]
+                );
             } catch (CouldNotSaveException $e) {
                 $this->messageManager->addErrorMessage(__('Could not save ticket'));
             }

@@ -1,0 +1,18 @@
+{{template config_path="design/email/header_template"}}
+
+<table class="message-details">
+    <tr>
+        <td><b>{{trans " Customer email:"}}</b></td>
+        <td>{{var email}}</td>
+    </tr>
+    <tr>
+        <td><b>{{trans "Subject"}}</b></td>
+        <td>{{var subject}}</td>
+    </tr>
+    <tr>
+        <td><b>{{trans "Message"}}</b></td>
+        <td>{{var message}}</td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="new_ticket_created">
+        <observer name="inchoo_ticketmanager_new_ticket_created" instance="Inchoo\TicketEmail\Observer\NewTicketEmail"/>
+    </event>
+</config>
