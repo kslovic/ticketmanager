@@ -98,8 +98,8 @@ class ListBlock extends Template
         $ticket = $this->getTicket();
         //set sort order
         $this->sortOrder
-            ->setField("created_at")
-            ->setDirection("desc");
+            ->setField('created_at')
+            ->setDirection('desc');
         //set current page
         $page = ($this->getRequest()->getParam('p')) ? $this->getRequest()->getParam('p') : 1;
         //set page size

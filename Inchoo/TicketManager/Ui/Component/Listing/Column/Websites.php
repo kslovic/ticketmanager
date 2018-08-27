@@ -53,7 +53,7 @@ class Websites extends Column
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as & $item) {
                 $Websites = $this->_storeManager->getWebsites();
-                $WebsiteName = "-";
+                $WebsiteName = '-';
                 foreach ($Websites as $website) {
                     if ($website->getId() == $item['website_id']) {
                         $WebsiteName = $website->getName();

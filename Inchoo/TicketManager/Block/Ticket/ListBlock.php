@@ -74,8 +74,8 @@ class ListBlock extends \Magento\Framework\View\Element\Template
     {
         //set sort order
         $this->sortOrder
-            ->setField("created_at")
-            ->setDirection("DESC");
+            ->setField('created_at')
+            ->setDirection('DESC');
         //set current page
         $page=($this->getRequest()->getParam('p'))? $this->getRequest()->getParam('p') : 1;
         //set page size
@@ -118,7 +118,7 @@ class ListBlock extends \Magento\Framework\View\Element\Template
      */
     public function getCloseTicketUrl($id)
     {
-        return $this->getUrl('t_manager/ticket/close', ['secure'=>true , 'id'=>$id]);
+        return $this->getUrl('t_manager/ticket/close', ['_secure'=>true , 'id'=>$id]);
     }
 
     /**
@@ -127,7 +127,7 @@ class ListBlock extends \Magento\Framework\View\Element\Template
      */
     public function getShowTicketRepliesUrl($id)
     {
-        return $this->getUrl('t_manager/ticketreply/list', ['secure'=>true ,'ticket_id'=>$id]);
+        return $this->getUrl('t_manager/ticketreply/list', ['_secure'=>true ,'ticket_id'=>$id]);
     }
     /**
      * @return string
